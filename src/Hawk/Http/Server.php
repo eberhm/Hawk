@@ -42,8 +42,18 @@ class Server
      */
     protected $_socket;
     
+    /**
+     * The error number from try to creating a server socket stream
+     * 
+     * @var int
+     */
     protected $_errorNumber;
     
+    /**
+     * The error string from try to creating a server socket stream
+     * 
+     * @var string
+     */
     protected $_errorString;
     
     /**
@@ -106,12 +116,17 @@ class Server
         $this->setPort($port);
     }
     
+    public function registerApplication(\Hawk\Http\Application\ApplicationInterface $app)
+    {
+        
+    }
+    
     /**
      * Runs the server
      */
     public function run()
     {
-        if (false === ($this->_socket = stream_socket_server($this->_getFormattedServerAddress(), $errno, $errstr))) {
+        if (false === ($this->_socket = stream_socket_server($this->_getFormattedServerAddress(), $this->_errorNumber, $this->_errorString))) {
             throw new \RuntimeException('Unable to bind Hawk to the address: ' . $this->_getFormattedServerAddress());
         }
         
@@ -136,6 +151,11 @@ class Server
         return extension_loaded('libevent');
     }
     
+    /**
+     * Gets the formatted address for Hawk to be able to bind itself to it.
+     * 
+     * @return string
+     */
     protected function _getFormattedServerAddress()
     {
         return 'tcp://' . $this->getAddress() . ':' . $this->getPort();

@@ -11,6 +11,8 @@
 
 namespace Hawk\Http\Connection;
 
+use Hawk\Http\Connection\Connection;
+
 /**
  * Description of Collection
  *
@@ -26,21 +28,37 @@ class Collection implements \ArrayAccess
     protected $_connections;
     
     /**
-     *
+     * The unique instance of this class
+     * 
      * @var \Hawk\Http\Connection\Collection
      */
     protected static $_instance;
     
+    /**
+     * Implementation of the \ArrayAccess::offsetExists
+     * @param type $offset
+     * @return boolean
+     */
     public function offsetExists($offset)
     {
         return !empty($this->_connections[$offset]);
     }
 
+    /**
+     * Implementation of the \ArrayAccess::offsetGet
+     * @param string $offset
+     * @return mixed
+     */
     public function offsetGet($offset)
     {
         return $this->_connections[$offset];
     }
 
+    /**
+     * Implementation of the \ArrayAccess::offsetSet
+     * @param string $offset
+     * @param \Hawk\Http\Connection\Connection $value
+     */
     public function offsetSet($offset, $value)
     {
         if (!($value instanceof Connection\Connection)) {
@@ -50,11 +68,20 @@ class Collection implements \ArrayAccess
         $this->_connections[$offset] = $value;
     }
 
+    /**
+     * Implementation of the \ArrayAccess::offsetUnset
+     * @param string $offset
+     */
     public function offsetUnset($offset)
     {
         unset($this->_connections[$offset]);
     }
     
+    /**
+     * The "singleton" method
+     * 
+     * @return \Hawk\Http\Connection\Connection
+     */
     public static function getInstance()
     {
         if (null === $this->_instance) {
@@ -64,15 +91,19 @@ class Collection implements \ArrayAccess
         return static::$_instance;
     }
     
+    /**
+     * Registers a new connection into the collection
+     * 
+     * @param resource $socket
+     * @param int $flag
+     * @param resoure $base
+     */
     public static function newConnection($socket, $flag, $base)
     {
         $collection = static::getInstance();
         
-        
-
-        // we need to save both buffer and connection outside
-        $GLOBALS['connections'][$id] = $connection;
-        $GLOBALS['buffers'][$id] = $buffer;
+        $connection = new Connection($socket, $flag, $base);
+        $this[$connection->getConnectionId()] = $connection;
     }
     
     /**
