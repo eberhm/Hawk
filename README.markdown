@@ -3,6 +3,7 @@ Hawk
 Hawk is a small, embeddable, non-blocking, event based http server written entirely in PHP.
 
 ```php
+#!/usr/bin/env php
 <?php
 require_once __DIR__ . '/lib/SplClassLoader.php';
 
@@ -10,7 +11,7 @@ $loader = new SplClassLoader('Hawk', __DIR__ . '/src');
 $loader->register();
 
 $hawk = new \Hawk\Http\Server();
-$hawk->registerApplicationHandler(new \My\Application\Handler());
+$hawk->registerApplication(new \My\Application());
 
 $hawk->run();
 ```
