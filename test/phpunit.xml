@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : phpunit.xml
+    Created on : 11 de septiembre de 2011, 21:13
+    Author     : Christian Soronellas <christian@sistemes-cayman.es>
+    Description:
+        
+-->
+
+<phpunit bootstrap="./bootstrap.php"
+         stopOnFailure="true"
+         colors="true"
+         stopOnError="true">
+             
+    <testsuites>
+        <testsuite name="Hawk test suite">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+
+</phpunit>
