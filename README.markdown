@@ -1,6 +1,6 @@
 Hawk
 ====
-Hawk is a small, non-blocking, event based http server written entirely in PHP.
+Hawk is a small, embeddable, non-blocking, event based http server written entirely in PHP.
 
 ```php
 <?php
