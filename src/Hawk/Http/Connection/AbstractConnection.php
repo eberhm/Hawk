@@ -11,7 +11,7 @@
 
 namespace Hawk\Http\Connection;
 
-namespace Hawk\Http\Request;
+use Hawk\Http\Request;
 
 /**
  * A class that represents an AbstractConnection
