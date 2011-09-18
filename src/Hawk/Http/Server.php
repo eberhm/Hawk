@@ -14,7 +14,7 @@ namespace Hawk\Http;
 use Hawk\Http\Connection\Collection as ConnectionCollection;
 
 /**
- * The Hawk HTTP server. A small non-blocking, event based http server written
+ * The Hawk HTTP server. A small, non-blocking, event based http server written
  * in PHP.
  *
  * @author Christian Soronellas <christian@sistemes-cayman.es>
