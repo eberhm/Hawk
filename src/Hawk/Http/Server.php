@@ -57,6 +57,13 @@ class Server
     protected $_errorString;
     
     /**
+     * The application that will get executed when serving requests
+     * 
+     * @var \Hawk\Http\ApplicationInferface
+     */
+    protected $_app;
+    
+    /**
      * Getter for the port
      * 
      * @return int
@@ -116,9 +123,14 @@ class Server
         $this->setPort($port);
     }
     
+    /**
+     * Registers the application that will be executed on each request
+     * 
+     * @param \Hawk\Http\Application\ApplicationInterface $app
+     */
     public function registerApplication(\Hawk\Http\Application\ApplicationInterface $app)
     {
-        
+        $this->_app = $app;
     }
     
     /**
@@ -126,6 +138,10 @@ class Server
      */
     public function run()
     {
+        if (null === $this->_app) {
+            throw new \Exception('An application must be registered before running Hawk!');
+        }
+        
         if (false === ($this->_socket = stream_socket_server($this->_getFormattedServerAddress(), $this->_errorNumber, $this->_errorString))) {
             throw new \RuntimeException('Unable to bind Hawk to the address: ' . $this->_getFormattedServerAddress());
         }
@@ -135,10 +151,15 @@ class Server
         $base = event_base_new();
         $event = event_new();
         
-        event_set($event, $socket, EV_READ | EV_WRITE | EV_PERSIST, array('ConnectionCollection', 'newConnection'), $base);
+        $app = $this->_app;
+        
+        event_set($event, $this->_socket, EV_READ | EV_WRITE | EV_PERSIST, function ($socket, $flag, $base) use ($app) {
+            ConnectionCollection::newConnection($socket, $flag, $base, $app);
+        }, $base);
+        
         event_base_set($event, $base);
         event_add($event);
-        event_base_loop($base);
+        event_base_loop($base, EVLOOP_NONBLOCK);
     }
     
     /**

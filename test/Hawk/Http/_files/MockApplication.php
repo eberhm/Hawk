@@ -9,21 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Hawk\Http\Application;
-
-use Hawk\Http\Request;
+use \Hawk\Http\Request;
 
 /**
- * The interface describing an Http Application
+ * A Mock Application driver for test purposes
  *
  * @author Christian Soronellas <christian@sistemes-cayman.es>
  */
-interface ApplicationInterface
+class MockApplication implements \Hawk\Http\Application\ApplicationInterface
 {
-    /**
-     * Executes the application
-     * 
-     * @return \Hawk\Http\Response
-     */
-    public function execute(Request $request);
+    public function execute(Request $request)
+    {
+        
+    }
+
 }

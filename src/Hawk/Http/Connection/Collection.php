@@ -11,7 +11,8 @@
 
 namespace Hawk\Http\Connection;
 
-use Hawk\Http\Connection\Connection;
+use Hawk\Http\Connection\Connection,
+    Hawk\Http\Application\ApplicationInterface;
 
 /**
  * Description of Collection
@@ -98,12 +99,14 @@ class Collection implements \ArrayAccess
      * @param int $flag
      * @param resoure $base
      */
-    public static function newConnection($socket, $flag, $base)
+    public static function newConnection($socket, $flag, $base, ApplicationInterface $app)
     {
         $collection = static::getInstance();
         
-        $connection = new Connection($socket, $flag, $base);
+        $connection = new Connection($socket, $flag, $base, $app);
         $this[$connection->getConnectionId()] = $connection;
+        
+        return $connection;
     }
     
     /**

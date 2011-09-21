@@ -25,16 +25,25 @@ class ServerTest extends \PHPUnit_Framework_TestCase
      */
     protected $_server;
     
+    /**
+     * Set up the world!
+     */
     public function setUp()
     {
         $this->_server = new \Hawk\Http\Server();
     }
     
+    /**
+     * Tear down
+     */
     public function tearDown()
     {
         $this->_server = null;
     }
     
+    /**
+     * Test that server port cannot be a string
+     */
     public function testPortCannotBeAString()
     {
         $this->_server->setPort('abc');
@@ -42,6 +51,9 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(9000, $this->_server->getPort());
     }
     
+    /**
+     * Test that server address can be ipv4 or ipv6 only
+     */
     public function testAddressCanOnlyBeIpv4OrIpv6()
     {
         $this->_server->setAddress('abc');
@@ -49,10 +61,23 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('0.0.0.0', $this->_server->getAddress());
     }
     
-    public function testRuningServer()
+    /**
+     * @expectedException Exception
+     */
+    public function testServerOnlyCanRunWithARegisteredApplication()
     {
         $this->_server->run();
+    }
+    
+    /**
+     * @expectedException PHPUnit_Framework_Error
+     */
+    public function testRuningServer()
+    {
+        require_once __DIR__ . '/_files/MockApplication.php';
         
-        $this->assertFalse(stream_socket_server('tcp://0.0.0.0:9000'));
+        $this->_server->registerApplication(new \MockApplication());
+        $this->_server->run();
+        stream_socket_server('tcp://0.0.0.0:9000');
     }
 }

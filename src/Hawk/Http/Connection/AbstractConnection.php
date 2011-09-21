@@ -11,7 +11,8 @@
 
 namespace Hawk\Http\Connection;
 
-use Hawk\Http\Request;
+use Hawk\Http\Request,
+    Hawk\Http\Application\ApplicationInterface;
 
 /**
  * A class that represents an AbstractConnection
@@ -35,6 +36,13 @@ abstract class AbstractConnection
     protected $_buffer;
     
     /**
+     * The application that will get executed
+     * 
+     * @var Hawk\Http\Application\ApplicationInterface
+     */
+    protected $_application;
+    
+    /**
      * Reads from a given buffer
      * 
      * @param type $buffer
@@ -52,6 +60,10 @@ abstract class AbstractConnection
         // After read all the request from the buffer, create the request
         // object and set all the environment
         $request = Request::fromString($dirtyRequest);
+        
+        // Execute the application and write the response
+        $response = $this->_application->execute($request);
+        $this->writeResponse($response);
     }
     
     /**
@@ -90,8 +102,10 @@ abstract class AbstractConnection
      * @param type $flag
      * @param type $base 
      */
-    public function __construct($socket, $flag, $base)
+    public function __construct($socket, $flag, $base, ApplicationInterface $app)
     {
+        $this->_application = $app;
+        
         $this->_connection = stream_socket_accept($socket);
         stream_set_blocking($this->_connection, 0);
 
