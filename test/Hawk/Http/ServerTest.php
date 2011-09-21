@@ -48,4 +48,11 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals('0.0.0.0', $this->_server->getAddress());
     }
+    
+    public function testRuningServer()
+    {
+        $this->_server->run();
+        
+        $this->assertFalse(stream_socket_server('tcp://0.0.0.0:9000'));
+    }
 }

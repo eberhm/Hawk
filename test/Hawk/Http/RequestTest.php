@@ -29,4 +29,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $this->_request = null;
     }
+    
+    public function testAssertTrue()
+    {
+        $this->assertTrue(true);
+    }
 }
