@@ -18,8 +18,20 @@ namespace Hawk\Http;
  */
 class Request
 {
+    /**
+     * The requested path
+     * 
+     * @var string
+     */
+    protected $_path;
+    
     public static function fromString($dirtyRequest)
     {
+        $requestLines = explode('\r\n', $dirtyRequest);
+        // Extract the first line. It will allways be the same
         
+        foreach ($requestLines as $requestLine) {
+            
+        }
     }
 }
